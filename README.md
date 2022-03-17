@@ -1,6 +1,6 @@
 # YOLOv4 RoundaboutTraffic Tutorial
 
-![Alt Text](https://www.dropbox.com/s/4yj016x3m8bf4vl/intro.gif?raw=1)
+![Alt Text](https://media.giphy.com/media/q9iAvwc1GhGX2RPgQ6/giphy.gif)
 
 This tutorial shows how to train a YOLOv4 vehicle detector using [Darknet](https://github.com/AlexeyAB/darknet) and the [RoundaboutTraffic](data/README.md) dataset on a [NVIDIA Jetson Nano 2GB](https://developer.nvidia.com/embedded/jetson-nano-2gb-developer-kit).
 
@@ -247,13 +247,13 @@ class_id = 1, name = car, ap = 72.98%   	 (TP = 2158, FP = 503)
 
 Here is a video snippet with the darknet detector running only with `yolov4-tiny.conv.29` pre-trained weights:
 
-![Alt Text](https://www.dropbox.com/s/5mpg6q7xiux6n7d/output-pretrained-model.gif?raw=1)
+![Alt Text](https://media.giphy.com/media/oebIqU8oI4c90e3KF3/giphy.gif)
 
 As you can see the occlusions (trees, other cars) in the roundabout and some of the angles the vehicles were caught in different frames clearly affect the detection. The IoU percentage is also not so great.
 
 On the other hand with the best custom trained model the detection and IoU percentage improve significantly with 1525 epochs of training. 
 
-![Alt Text](https://www.dropbox.com/s/pp1tc80712epqax/output-trained-model.gif?raw=1)
+![Alt Text](https://media.giphy.com/media/G3HMQpMC7GYvCghiai/giphy.gif)
 
 In terms of FPS processed by darknet with the trained model and with an input video of 1920x1080@30FPS it gives us around 10 FPS on average:
 
