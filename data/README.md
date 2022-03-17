@@ -1,5 +1,7 @@
 # Roundabout Traffic Dataset
 
+![Alt Text](../imgs/roundabout_traffic.jpg "Roundabout Traffic")
+
 Roundabout Traffic dataset is based on a recorded video with a fixed camera in a roundabout. The video has 2:29 minutes and was annotated and labeled using [VOTT](https://github.com/microsoft/VoTT) tool. Even though the video was shot with 30 FPS, only 15 FPS were labeled due to time constrains.
 
 This is a small dataset. It consists of 1483 images (1920 × 1080 RGB) with their annotations from which 1096 images are used for training and 386 images are used for validation. There are around 9 vehicles per image with various kinds of occlusions (trees, buildings, other vehicles).

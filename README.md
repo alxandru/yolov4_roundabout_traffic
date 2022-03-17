@@ -115,7 +115,8 @@ $ wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_opt
 6. Now you can check weather the installation is successful: 
 
 ```bash
-$ ./darknet detector test cfg/coco.data cfg/yolov4.cfg yolov4.weights data/person.jpg
+$ ./darknet detector test cfg/coco.data cfg/yolov4.cfg \
+            yolov4.weights data/person.jpg
 ```
 
 <a name="downloading"></a>
@@ -165,7 +166,8 @@ $ wget https://github.com/AlexeyAB/darknet/releases/download/yolov4/yolov4-tiny.
 Finally, we train the model:
 
 ```bash
-$ ./darknet detector train data/obj.data cfg/yolov4-tiny-bus-car.cfg yolov4-tiny.conv.29 -dont_show -mjpeg_port 8090 -map
+$ ./darknet detector train data/obj.data cfg/yolov4-tiny-bus-car.cfg \
+            yolov4-tiny.conv.29 -dont_show -mjpeg_port 8090 -map
 ```
 
 The training will last for a long time and after a couple of hours most likely the process is killed by the OS due to high memory/cpu consumption. If you applied the patch described in [Installing Darknet](#installing) Step 3, the weights are backup every 25 epochs. You can continue the training with the weight of the last backup:
@@ -174,7 +176,9 @@ The training will last for a long time and after a couple of hours most likely t
 $ cd backup 
 $ cp yolov4-tiny-bus-car_last.weights yolov4-tiny-bus-car_last1.weights
 $ cd ..
-$ ./darknet detector train data/obj.data cfg/yolov4-tiny-bus-car.cfg backup/yolov4-tiny-bus-car_last1.weights -dont_show -mjpeg_port 8090 -map
+$ ./darknet detector train data/obj.data cfg/yolov4-tiny-bus-car.cfg \
+            backup/yolov4-tiny-bus-car_last1.weights \
+            -dont_show -mjpeg_port 8090 -map
 ```
 
 Normally when the model is being trained, you could monitor its progress on the loss/mAP chart (since the -map option is used). But since the process is restarted various time due to limited resources the chart is fragmented (for every restart there is a new chart). Hence, I don't include the loss/mAP chart here.
@@ -190,7 +194,9 @@ I trained the model for 1525 epochs and took about 3 days.
 After the training is done you can check the mAP of the best model on an [new video](https://drive.google.com/file/d/1GnGOLN_1nlq1-yttD_uk_zJzgfr6vt8Q/view?usp=sharing) like this:
 
 ```bash
-$ ./darknet detector map data/obj.data cfg/yolov4-tiny-bus-car.cfg backup/yolov4-tiny-bus-car_best.weights ${HOME}/tutorial/test002.mp4
+$ ./darknet detector map data/obj.data cfg/yolov4-tiny-bus-car.cfg \
+            backup/yolov4-tiny-bus-car_best.weights \
+            ${HOME}/tutorial/test002.mp4
 ```
 
 I got (mAP@0.50) = 0.953121, or 95.31 % when tested my best custom trained model:
@@ -214,7 +220,9 @@ class_id = 1, name = car, ap = 96.77%   	 (TP = 2618, FP = 43)
 And if tested with an IoU threshold = 75%:
 
 ```bash
-$ ./darknet detector map data/obj.data cfg/yolov4-tiny-bus-car.cfg backup/yolov4-tiny-bus-car_last.weights ${HOME}/tutorial/test002.mp4 -iou_thresh 0.75
+$ ./darknet detector map data/obj.data cfg/yolov4-tiny-bus-car.cfg \
+            backup/yolov4-tiny-bus-car_last.weights \
+            ${HOME}/tutorial/test002.mp4 -iou_thresh 0.75
 ```
 
 the mAP decreases to mAP@0.75) = 0.609026, or 60.90 %:
@@ -250,7 +258,9 @@ In terms of FPS processed by darknet with the trained model and with an input vi
 Finally, let's run a benchmark test on the test video to see the performance in terms of FPS processed by darknet:
 
 ```bash
-$ ./darknet detector demo data/obj.data cfg/yolov4-tiny-bus-car.cfg backup/yolov4-tiny-bus-car_best.weights ${HOME}/tutorial/test002.mp4 -benchmark
+$ ./darknet detector demo data/obj.data cfg/yolov4-tiny-bus-car.cfg \ 
+            backup/yolov4-tiny-bus-car_best.weights \ 
+            ${HOME}/tutorial/test002.mp4 -benchmark
 ```
 
 With the trained model for an input video of 1920x1080@30FPS darknet processes around 10 FPS on average:
