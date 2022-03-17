@@ -1,6 +1,6 @@
 # YOLOv4 RoundaboutTraffic Tutorial
 
-This tutorial shows how to train a YOLOv4 vehicle detector using [Darknet](https://github.com/AlexeyAB/darknet) and the [RoundaboutTraffic](data/README.md) dataset ona a [NVIDIA Jetson Nano 2GB](https://developer.nvidia.com/embedded/jetson-nano-2gb-developer-kit).
+This tutorial shows how to train a YOLOv4 vehicle detector using [Darknet](https://github.com/AlexeyAB/darknet) and the [RoundaboutTraffic](data/README.md) dataset on a [NVIDIA Jetson Nano 2GB](https://developer.nvidia.com/embedded/jetson-nano-2gb-developer-kit).
 
 ## Table of contents
 
