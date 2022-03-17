@@ -245,15 +245,16 @@ class_id = 1, name = car, ap = 72.98%   	 (TP = 2158, FP = 503)
  mean average precision (mAP@0.75) = 0.609026, or 60.90 %
 ```
 
-Here is a video snippet with the darknet detector running only with `yolov4-tiny.conv.29` pre-trained weights:
+Here is a video snippet with the darknet detector running only with `yolov4-tiny.conv.29` pre-trained weights (click on image to open the Youtube video):
 
-![Alt Text](https://media.giphy.com/media/Td7s1erXFEnYEPXMTw/giphy.gif)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/qiXQ-88ZDgU/hqdefault.jpg)](https://www.youtube.com/watch?v=qiXQ-88ZDgU)
 
 As you can see the occlusions (trees, other cars) in the roundabout and some of the angles the vehicles were caught in different frames clearly affect the detection. The IoU percentage is also not so great.
 
 On the other hand with the best custom trained model the detection and IoU percentage improve significantly with 1525 epochs of training. 
 
-![Alt Text](https://media.giphy.com/media/275piXvsjX2QA2msSj/giphy.gif)
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/lOHfyrULuKQ/hqdefault.jpg)](https://www.youtube.com/watch?v=lOHfyrULuKQ)
 
 In terms of FPS processed by darknet with the trained model and with an input video of 1920x1080@30FPS it gives us around 10 FPS on average:
 
