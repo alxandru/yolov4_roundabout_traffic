@@ -1,0 +1,136 @@
+diff --git a/src/classifier.c b/src/classifier.c
+index e42b1ea..82d1fcf 100644
+--- a/src/classifier.c
++++ b/src/classifier.c
+@@ -366,7 +366,7 @@ if(*net.seen/N > epoch){
+     sprintf(buff, "%s/%s_%d.weights",backup_directory,base, epoch);
+     save_weights(net, buff);
+ }
+-if(get_current_batch(net)%100 == 0){
++if(get_current_batch(net)%25 == 0){
+     char buff[256];
+     sprintf(buff, "%s/%s.backup",backup_directory,base);
+     save_weights(net, buff);
+diff --git a/src/coco.c b/src/coco.c
+index 605e9ac..6934ef7 100644
+--- a/src/coco.c
++++ b/src/coco.c
+@@ -86,12 +86,12 @@ void train_coco(char *cfgfile, char *weightfile)
+         avg_loss = avg_loss*.9 + loss*.1;
+ 
+         printf("%d: %f, %f avg, %f rate, %lf seconds, %d images\n", i, loss, avg_loss, get_current_rate(net), sec(clock()-time), i*imgs);
+-        if(i%1000==0 || (i < 1000 && i%100 == 0)){
++        if(i%1000==0 || (i < 1000 && i%25 == 0)){
+             char buff[256];
+             sprintf(buff, "%s/%s_%d.weights", backup_directory, base, i);
+             save_weights(net, buff);
+         }
+-        if(i%100==0){
++        if(i%25==0){
+             char buff[256];
+             sprintf(buff, "%s/%s.backup", backup_directory, base);
+             save_weights(net, buff);
+diff --git a/src/compare.c b/src/compare.c
+index 62edabe..bec382c 100644
+--- a/src/compare.c
++++ b/src/compare.c
+@@ -56,7 +56,7 @@ void train_compare(char *cfgfile, char *weightfile)
+         avg_loss = avg_loss*.9 + loss*.1;
+         printf("%.3f: %f, %f avg, %lf seconds, %ld images\n", (float)*net.seen/N, loss, avg_loss, sec(clock()-time), *net.seen);
+         free_data(train);
+-        if(i%100 == 0){
++        if(i%25 == 0){
+             char buff[256];
+             sprintf(buff, "%s/%s_%d_minor_%d.weights",backup_directory,base, epoch, i);
+             save_weights(net, buff);
+diff --git a/src/detector.c b/src/detector.c
+index c6bc788..7f82e77 100644
+--- a/src/detector.c
++++ b/src/detector.c
+@@ -403,7 +403,7 @@ void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, i
+             save_weights(net, buff);
+         }
+ 
+-        if (iteration >= (iter_save_last + 100) || (iteration % 100 == 0 && iteration > 1)) {
++        if (iteration >= (iter_save_last + 25) || (iteration % 25 == 0 && iteration > 1)) {
+             iter_save_last = iteration;
+ #ifdef GPU
+             if (ngpus != 1) sync_nets(nets, ngpus, 0);
+diff --git a/src/rnn_vid.c b/src/rnn_vid.c
+index a5ff527..2ed55d4 100644
+--- a/src/rnn_vid.c
++++ b/src/rnn_vid.c
+@@ -108,7 +108,7 @@ void train_vid_rnn(char *cfgfile, char *weightfile)
+         avg_loss = avg_loss*.9 + loss*.1;
+ 
+         fprintf(stderr, "%d: %f, %f avg, %f rate, %lf seconds\n", i, loss, avg_loss, get_current_rate(net), sec(clock()-time));
+-        if(i%100==0){
++        if(i%25==0){
+             char buff[256];
+             sprintf(buff, "%s/%s_%d.weights", backup_directory, base, i);
+             save_weights(net, buff);
+diff --git a/src/super.c b/src/super.c
+index 35e7f6c..f67eddd 100644
+--- a/src/super.c
++++ b/src/super.c
+@@ -59,7 +59,7 @@ void train_super(char *cfgfile, char *weightfile)
+             sprintf(buff, "%s/%s_%d.weights", backup_directory, base, i);
+             save_weights(net, buff);
+         }
+-        if(i%100==0){
++        if(i%25==0){
+             char buff[256];
+             sprintf(buff, "%s/%s.backup", backup_directory, base);
+             save_weights(net, buff);
+diff --git a/src/tag.c b/src/tag.c
+index d7e1349..86140c7 100644
+--- a/src/tag.c
++++ b/src/tag.c
+@@ -71,7 +71,7 @@ void train_tag(char *cfgfile, char *weightfile, int clear)
+             sprintf(buff, "%s/%s_%d.weights",backup_directory,base, epoch);
+             save_weights(net, buff);
+         }
+-        if(get_current_batch(net)%100 == 0){
++        if(get_current_batch(net)%25 == 0){
+             char buff[256];
+             sprintf(buff, "%s/%s.backup",backup_directory,base);
+             save_weights(net, buff);
+diff --git a/src/voxel.c b/src/voxel.c
+index 9f50112..117e881 100644
+--- a/src/voxel.c
++++ b/src/voxel.c
+@@ -94,7 +94,7 @@ void train_voxel(char *cfgfile, char *weightfile)
+             sprintf(buff, "%s/%s_%d.weights", backup_directory, base, i);
+             save_weights(net, buff);
+         }
+-        if(i%100==0){
++        if(i%25==0){
+             char buff[256];
+             sprintf(buff, "%s/%s.backup", backup_directory, base);
+             save_weights(net, buff);
+diff --git a/src/writing.c b/src/writing.c
+index 29785b7..414258d 100644
+--- a/src/writing.c
++++ b/src/writing.c
+@@ -67,7 +67,7 @@ void train_writing(char *cfgfile, char *weightfile)
+         avg_loss = avg_loss*.9 + loss*.1;
+         printf("%d, %.3f: %f, %f avg, %f rate, %lf seconds, %ld images\n", get_current_batch(net), (float)(*net.seen)/N, loss, avg_loss, get_current_rate(net), sec(clock()-time), *net.seen);
+         free_data(train);
+-        if(get_current_batch(net)%100 == 0){
++        if(get_current_batch(net)%25 == 0){
+             char buff[256];
+             sprintf(buff, "%s/%s_batch_%d.weights", backup_directory, base, get_current_batch(net));
+             save_weights(net, buff);
+diff --git a/src/yolo.c b/src/yolo.c
+index dd5e2a1..8432091 100644
+--- a/src/yolo.c
++++ b/src/yolo.c
+@@ -71,7 +71,7 @@ void train_yolo(char *cfgfile, char *weightfile)
+         avg_loss = avg_loss*.9 + loss*.1;
+ 
+         printf("%d: %f, %f avg, %f rate, %lf seconds, %d images\n", i, loss, avg_loss, get_current_rate(net), sec(clock()-time), i*imgs);
+-        if(i%1000==0 || (i < 1000 && i%100 == 0)){
++        if(i%1000==0 || (i < 1000 && i%25 == 0)){
+             char buff[256];
+             sprintf(buff, "%s/%s_%d.weights", backup_directory, base, i);
+             save_weights(net, buff);
