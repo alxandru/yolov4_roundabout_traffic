@@ -353,7 +353,7 @@ pre-cluster-threshold=0.25
 
 Note: If you don't have the YOLO weights you can use the [cfg/yolov4-tiny-bus-car_best.weights](cfg/yolov4-tiny-bus-car_best.weights).
 
-Also edit the `deepstream_app_config.txt` file specify the input video and to save the output to a mp4 file:
+Also edit the `deepstream_app_config.txt` file to specify the input video and to save the output to a mp4 file:
 
 ```bash
 ...
@@ -381,13 +381,13 @@ source-id=0
 
 Note: You can use this [video](https://drive.google.com/file/d/1GnGOLN_1nlq1-yttD_uk_zJzgfr6vt8Q/view?usp=sharing) as the input video.
 
-Run the `deepstream-app` that was installed with the DeepStream SDK.
+Run the `deepstream-app` that was installed with the DeepStream SDK with our configuration.
 
 ```bash
 deepstream-app -c deepstream_app_config.txt
 ```
 
-By converting the model to TRT there can be seen a small increase in inference performance in terms of FPS:
+By converting the model to TRT a small increase in inference performance in terms of FPS may be observed:
 
 ```bash
 **PERF:  13.54 (13.44)
@@ -427,7 +427,7 @@ And run the `deepstream-app` again:
 deepstream-app -c deepstream_app_config.txt
 ```
 
-You can observer a significant improvement in terms of FPS comparing to the baseline model (around 12.5 FPS more):
+We can observer a significant improvement in terms of FPS comparing to the baseline model (around 12.5 FPS more):
 
 ```bash
 **PERF:  22.54 (22.44)
@@ -438,4 +438,4 @@ You can observer a significant improvement in terms of FPS comparing to the base
 **PERF:  22.48 (22.47)
 ```
 
-Although DeepStream-Yolo offers support for INT8 inference, the Jetson Nano does not support INT8 inference. It requiers GPU architecture > 7.x. Details can be found [here](https://docs.nvidia.com/deeplearning/tensorrt/support-matrix/index.html#hardware-precision-matrix).
+Although DeepStream-Yolo offers support for INT8 inference, the Jetson Nano does not support it. It requires GPU architecture > 7.x. Details can be found [here](https://docs.nvidia.com/deeplearning/tensorrt/support-matrix/index.html#hardware-precision-matrix).
