@@ -295,3 +295,147 @@ Objects:
 ## Optimizations
 
 ---
+
+Next we will see how to improve the inference performance using [DeepStream-Yolo](https://github.com/marcoslucianops/DeepStream-Yolo).
+
+### Requirements for Jetson Nano
+
+* [JetPack 4.6](https://developer.nvidia.com/embedded/jetpack)
+* [NVIDIA DeepStream SDK 6.0](https://developer.nvidia.com/deepstream-sdk)
+* [DeepStream-Yolo](https://github.com/marcoslucianops/DeepStream-Yolo)
+
+### Usage
+
+Once we have all the requirements installed, we download the DeepStream-Yolo repo.
+
+```bash
+$ cd ${HOME}/tutorial
+$ git clone https://github.com/marcoslucianops/DeepStream-Yolo.git
+$ cd DeepStream-Yolo
+```
+
+Compile the library for the Jetson platform:
+
+```bash
+$ CUDA_VER=10.2 make -C nvdsinfer_custom_impl_Yolo
+```
+
+Edit the `config_infer_primary.txt` for our custom yolov4-tiny model:
+
+```bash
+[property]
+gpu-id=0
+net-scale-factor=0.0039215697906911373
+model-color-format=0
+custom-network-config=${HOME}/project/darknet/cfg/yolov4-tiny-bus-car.cfg
+model-file=${HOME}/project/darknet/backup/yolov4-tiny-bus-car_best.weights
+model-engine-file=model_b1_gpu0_fp32.engine
+#int8-calib-file=calib.table
+labelfile-path=${HOME}/project/darknet/data/obj.names
+batch-size=1
+## 0=FP32, 1=INT8, 2=FP16 mode
+network-mode=0
+num-detected-classes=2
+interval=0
+gie-unique-id=1
+process-mode=1
+network-type=0
+cluster-mode=2
+maintain-aspect-ratio=0
+parse-bbox-func-name=NvDsInferParseYolo
+custom-lib-path=nvdsinfer_custom_impl_Yolo/libnvdsinfer_custom_impl_Yolo.so
+engine-create-func-name=NvDsInferYoloCudaEngineGet
+
+[class-attrs-all]
+nms-iou-threshold=0.5
+pre-cluster-threshold=0.25
+```
+
+Note: If you don't have the YOLO weights you can use the [cfg/yolov4-tiny-bus-car_best.weights](cfg/yolov4-tiny-bus-car_best.weights).
+
+Also edit the `deepstream_app_config.txt` file specify the input video and to save the output to a mp4 file:
+
+```bash
+...
+[source0]
+enable=1
+type=3
+uri=file://<path to the input mp4 file>
+num-sources=1
+gpu-id=0
+cudadec-memtype=0
+
+[sink0]
+enable=1
+type=3
+#1=mp4 2=mkv
+container=1
+#1=h264 2=h265
+codec=1
+sync=0
+bitrate=2000000
+output-file=<path to the output file>
+source-id=0
+...
+```
+
+Note: You can use this [video](https://drive.google.com/file/d/1GnGOLN_1nlq1-yttD_uk_zJzgfr6vt8Q/view?usp=sharing) as the input video.
+
+Run the `deepstream-app` that was installed with the DeepStream SDK.
+
+```bash
+deepstream-app -c deepstream_app_config.txt
+```
+
+By converting the model to TRT there can be seen a small increase in inference performance in terms of FPS:
+
+```bash
+**PERF:  13.54 (13.44)
+**PERF:  13.52 (13.52)
+**PERF:  13.50 (13.48)
+**PERF:  13.50 (13.51)
+**PERF:  13.50 (13.49)
+**PERF:  13.48 (13.47)
+```
+
+We gained around 3.5 FPS comparing to the baseline model. But can we do better? Let's change the FP32 inference to FP16 (precision will be lost).
+
+Change the `config_infer_primary.txt`:
+
+```bash
+...
+model-engine-file=model_b1_gpu0_fp32.engine
+...
+network-mode=0
+...
+```
+
+to:
+
+```bash
+...
+model-engine-file=model_b1_gpu0_fp16.engine
+...
+network-mode=2
+...
+```
+
+And run the `deepstream-app` again:
+
+
+```bash
+deepstream-app -c deepstream_app_config.txt
+```
+
+You can observer a significant improvement in terms of FPS comparing to the baseline model (around 12.5 FPS more):
+
+```bash
+**PERF:  22.54 (22.44)
+**PERF:  22.52 (22.52)
+**PERF:  22.50 (22.48)
+**PERF:  22.50 (22.51)
+**PERF:  22.50 (22.49)
+**PERF:  22.48 (22.47)
+```
+
+Although DeepStream-Yolo offers support for INT8 inference, the Jetson Nano does not support INT8 inference. It requiers GPU architecture > 7.x. Details can be found [here](https://docs.nvidia.com/deeplearning/tensorrt/support-matrix/index.html#hardware-precision-matrix).
